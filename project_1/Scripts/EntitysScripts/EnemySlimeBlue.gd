@@ -13,3 +13,4 @@ func _play_animation(delta):
 	
 func die():
 	anim_sprite.play("die")
+	$CollisionShape2D.set_deferred("disabled", true)

@@ -1,8 +1,15 @@
 extends KinematicBody2D
 
 
+signal hp_changed
 var speed = 100
 onready var animSprite = $AnimatedSprite
+var hp = 5
+
+
+func _ready():
+	emit_signal("hp_changed", hp)
+
 
 func _physics_process(delta):
 	var move_direction = Vector2()
@@ -25,9 +32,13 @@ func _physics_process(delta):
 	
 	
 func enemy_contact(enemy: Node2D):
+	hit_enemy(enemy)
+
+
+func hit_enemy(enemy: Node2D):
 	if enemy.has_method("die"):
 		enemy.die()
-		
-	
 
-	
+
+func take_damage():
+	emit_signal("hp_changed", hp)
