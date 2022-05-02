@@ -4,11 +4,11 @@ extends KinematicBody2D
 signal hp_changed
 var speed = 100
 onready var animSprite = $AnimatedSprite
-var hp = 5
+var hp := 3
 
 
 func _ready():
-	emit_signal("hp_changed", hp)
+	call_deferred("change_hp", 0)
 
 
 func _physics_process(delta):
@@ -41,4 +41,9 @@ func hit_enemy(enemy: Node2D):
 
 
 func take_damage():
-	emit_signal("hp_changed", hp)
+	change_hp(-1)
+	
+
+func change_hp(diff: int):
+	hp += diff
+	emit_signal("hp_changed", hp)	

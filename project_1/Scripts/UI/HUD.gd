@@ -14,7 +14,7 @@ func update_hp(hp: int):
 	if hp > current_hp:
 		for i in range(hp - current_hp):
 			var texture_rect = TextureRect.new()
-			texture_rect = hp_texture
+			texture_rect.texture = hp_texture
 			hp_container.add_child(texture_rect)
 	elif hp < current_hp:
 		for i in range(current_hp - hp):
