@@ -3,7 +3,7 @@ extends KinematicBody2D
 
 signal hp_changed
 var speed = 100
-onready var animSprite = $AnimatedSprite
+onready var animSprite = $AnimationPlayer
 var hp := 3
 
 
@@ -15,18 +15,16 @@ func _physics_process(delta):
 	var move_direction = Vector2()
 	if Input.is_action_pressed("Move_left"):
 		move_direction.x -= speed
-		animSprite.play("Move")
-		animSprite.flip_h = true
+		animSprite.play("move_left")
 	if Input.is_action_pressed("Move_right"):
 		move_direction.x += speed
-		animSprite.play("Move")
-		animSprite.flip_h = false
+		animSprite.play("move_right")
 	if Input.is_action_pressed("Move_up"):
 		move_direction.y -= speed
 	if Input.is_action_pressed("Move_down"):
 		move_direction.y += speed
 	if !Input.is_action_pressed("Move_left") and !Input.is_action_pressed("Move_right") and !Input.is_action_pressed("Move_up") and !Input.is_action_pressed("Move_down"):
-		animSprite.play("Idle")
+		animSprite.play("idle")
 		
 	move_and_slide(move_direction, Vector2(0, 1))
 	
