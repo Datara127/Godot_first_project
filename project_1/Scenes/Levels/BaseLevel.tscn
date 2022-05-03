@@ -268,6 +268,6 @@ position = Vector2( 210, 178 )
 [node name="HUD" parent="CanvasLayer" instance=ExtResource( 4 )]
 
 [node name="KinematicBody2D" parent="." instance=ExtResource( 1 )]
-position = Vector2( 129, -15 )
+position = Vector2( 153, -39 )
 
 [connection signal="hp_changed" from="KinematicBody2D" to="CanvasLayer/HUD" method="update_hp"]
