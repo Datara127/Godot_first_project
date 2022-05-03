@@ -4,11 +4,12 @@ extends KinematicBody2D
 signal hp_changed
 var speed = 100
 onready var animSprite = $AnimationPlayer
-var hp := 15
+var hp = 5
 enum State { ATTACK, MOVE}
 enum Direct{ right, left, down, up}
 var state = State.MOVE
 var dir = Direct.left
+var sword_damage = 2
 
 
 func _ready():
@@ -48,6 +49,10 @@ func animation_player(move_direction):
 			animSprite.play("hit_left")
 		elif dir == Direct.right:
 			animSprite.play("hit_right")
+		elif dir == Direct.down:
+			animSprite.play("hit_left")
+		elif dir == Direct.up:
+			animSprite.play("hit_right")
 	
 
 
@@ -62,13 +67,14 @@ func animation_attack_finish():
 	
 func enemy_contact(enemy: Node2D):
 	if enemy.is_in_group("Enemy"):
-		take_damage(-2)
-		hit_enemy_blue_slime(enemy)
+		if enemy.is_in_group("slime"):
+			take_damage(-1)
+			hit_enemy_blue_slime(enemy)
 
 
 func hit_enemy_blue_slime(enemy: Node2D):
-	if enemy.has_method("die"):
-		enemy.die()
+	if enemy.has_method("taking_damage_from_a_player"):
+		enemy.taking_damage_from_a_player(sword_damage)
 
 
 func take_damage(damage: int):
