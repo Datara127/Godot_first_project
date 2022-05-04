@@ -1,9 +1,10 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Scenes/Entitys/MainPerson.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/tilesets/plains.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/Entitys/EnemySlimeBlue.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/UI/HUD.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Environment/Grass_1.tscn" type="PackedScene" id=5]
 
 [sub_resource type="ConvexPolygonShape2D" id=3]
 points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
@@ -245,7 +246,7 @@ points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
 3/z_index = 0
 
 [node name="BaseLevel" type="Node2D"]
-position = Vector2( 0, 237 )
+position = Vector2( -1, 237 )
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
@@ -269,5 +270,20 @@ position = Vector2( 210, 178 )
 
 [node name="KinematicBody2D" parent="." instance=ExtResource( 1 )]
 position = Vector2( 153, -39 )
+
+[node name="Grass" parent="." instance=ExtResource( 5 )]
+position = Vector2( 36, 56 )
+
+[node name="Grass4" parent="." instance=ExtResource( 5 )]
+position = Vector2( 52, 56 )
+
+[node name="Grass3" parent="." instance=ExtResource( 5 )]
+position = Vector2( 36, 24 )
+
+[node name="Grass2" parent="." instance=ExtResource( 5 )]
+position = Vector2( 36, 40 )
+
+[node name="Grass5" parent="." instance=ExtResource( 5 )]
+position = Vector2( 68, 56 )
 
 [connection signal="hp_changed" from="KinematicBody2D" to="CanvasLayer/HUD" method="update_hp"]

@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 
 signal hp_changed
-enum State { ATTACK, MOVE}
+enum State { ATTACK, MOVE, ROLL}
 onready var animSprite = $AnimationPlayer
 onready var animTree = $AnimationTree
 onready var animState = animTree.get("parameters/playback")
@@ -20,27 +20,42 @@ func _ready():
 
 
 func _physics_process(delta):
+	match state:
+		State.MOVE:
+			move_state(delta)
+			
+		State.ATTACK:
+			attack_state(delta)
+			
+		State.ROLL:
+			pass
+	
+
+func move_state(delta):
 	var move_direction = Vector2()
 	move_direction.x = Input.get_action_strength("Move_right") - Input.get_action_strength("Move_left")
 	move_direction.y = Input.get_action_strength("Move_down") - Input.get_action_strength("Move_up")
 	move_direction = move_direction.normalized()
 	
-#	if Input.is_action_just_pressed("hit_player"):
-#		state = State.ATTACK
+	if Input.is_action_just_pressed("hit_player"):
+		state = State.ATTACK
 	
 	if state == State.MOVE:
 		if move_direction != Vector2.ZERO:
 			animTree.set("parameters/Idle/blend_position", move_direction)
 			animTree.set("parameters/Run/blend_position", move_direction)
+			animTree.set("parameters/Attack/blend_position", move_direction)
 			animState.travel("Run")
 			velocity = velocity.move_toward(move_direction * MAX_SPEED, ACCELERATION * delta)
 		else:
 			animState.travel("Idle")
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
-	elif state == State.ATTACK:
-		animSprite.play("hit_left")
 	
 	velocity = move_and_slide(velocity)
+
+
+func attack_state(delta):
+	animState.travel("Attack")
 
 
 func sword_hit(enemy: Node2D):
