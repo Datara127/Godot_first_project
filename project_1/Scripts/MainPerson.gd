@@ -2,15 +2,18 @@ extends KinematicBody2D
 
 
 signal hp_changed
-var speed = 100
-onready var animSprite = $AnimationPlayer
-var hp = 5
 enum State { ATTACK, MOVE}
-enum Direct{ right, left, down, up}
+onready var animSprite = $AnimationPlayer
+onready var animTree = $AnimationTree
+onready var animState = animTree.get("parameters/playback")
+var speed = 100
+var hp = 5
 var state = State.MOVE
-var dir = Direct.left
 var sword_damage = 2
-
+var velocity = Vector2.ZERO
+var ACCELERATION = 500
+var MAX_SPEED = 80
+var FRICTION = 500
 
 func _ready():
 	call_deferred("change_hp", 0)
@@ -18,42 +21,26 @@ func _ready():
 
 func _physics_process(delta):
 	var move_direction = Vector2()
-	if Input.is_action_pressed("Move_left"):
-		move_direction.x -= speed
-		dir = Direct.left
-	if Input.is_action_pressed("Move_right"):
-		move_direction.x += speed
-		dir = Direct.right
-	if Input.is_action_pressed("Move_up"):
-		move_direction.y -= speed
-		dir = Direct.up
-	if Input.is_action_pressed("Move_down"):
-		move_direction.y += speed
-		dir = Direct.down
-	if Input.is_action_just_pressed("hit_player") and !Input.is_action_pressed("Move_down") and !Input.is_action_pressed("Move_up"):
-		state = State.ATTACK
-
-	move_and_slide(move_direction, Vector2(0, 1))
-	animation_player(move_direction)
-
-func animation_player(move_direction):
-	if state == State.MOVE:
-		if move_direction.x == 0 and move_direction.y == 0:
-			animSprite.play("idle")
-		if move_direction.x > 0:
-			animSprite.play("move_right")
-		if move_direction.x < 0:
-			animSprite.play("move_left")
-	elif state == State.ATTACK:
-		if dir == Direct.left:
-			animSprite.play("hit_left")
-		elif dir == Direct.right:
-			animSprite.play("hit_right")
-		elif dir == Direct.down:
-			animSprite.play("hit_left")
-		elif dir == Direct.up:
-			animSprite.play("hit_right")
+	move_direction.x = Input.get_action_strength("Move_right") - Input.get_action_strength("Move_left")
+	move_direction.y = Input.get_action_strength("Move_down") - Input.get_action_strength("Move_up")
+	move_direction = move_direction.normalized()
 	
+#	if Input.is_action_just_pressed("hit_player"):
+#		state = State.ATTACK
+	
+	if state == State.MOVE:
+		if move_direction != Vector2.ZERO:
+			animTree.set("parameters/Idle/blend_position", move_direction)
+			animTree.set("parameters/Run/blend_position", move_direction)
+			animState.travel("Run")
+			velocity = velocity.move_toward(move_direction * MAX_SPEED, ACCELERATION * delta)
+		else:
+			animState.travel("Idle")
+			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
+	elif state == State.ATTACK:
+		animSprite.play("hit_left")
+	
+	velocity = move_and_slide(velocity)
 
 
 func sword_hit(enemy: Node2D):
