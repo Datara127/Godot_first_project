@@ -25,10 +25,10 @@ func _physics_process(delta):
 			move_state(delta)
 			
 		State.ATTACK:
-			attack_state(delta)
+			attack_state()
 			
 		State.ROLL:
-			pass
+			roll_state()
 	
 
 func move_state(delta):
@@ -39,12 +39,15 @@ func move_state(delta):
 	
 	if Input.is_action_just_pressed("hit_player"):
 		state = State.ATTACK
+	if Input.is_action_just_pressed("roll_space"):
+		state = State.ROLL
 	
 	if state == State.MOVE:
 		if move_direction != Vector2.ZERO:
 			animTree.set("parameters/Idle/blend_position", move_direction)
 			animTree.set("parameters/Run/blend_position", move_direction)
 			animTree.set("parameters/Attack/blend_position", move_direction)
+			animTree.set("parameters/Roll/blend_position", move_direction)
 			animState.travel("Run")
 			velocity = velocity.move_toward(move_direction * MAX_SPEED, ACCELERATION * delta)
 		else:
@@ -54,8 +57,12 @@ func move_state(delta):
 	velocity = move_and_slide(velocity)
 
 
-func attack_state(delta):
+func attack_state():
 	animState.travel("Attack")
+	
+
+func roll_state():
+	animState.travel("Roll")
 
 
 func sword_hit(enemy: Node2D):
@@ -64,6 +71,9 @@ func sword_hit(enemy: Node2D):
 
 
 func animation_attack_finish():
+	state = State.MOVE
+
+func animation_roll_finish():
 	state = State.MOVE
 
 	

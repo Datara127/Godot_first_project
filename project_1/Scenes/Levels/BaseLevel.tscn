@@ -268,9 +268,6 @@ position = Vector2( 473, -52 )
 [node name="Slime3" parent="." instance=ExtResource( 3 )]
 position = Vector2( 210, 178 )
 
-[node name="KinematicBody2D" parent="." instance=ExtResource( 1 )]
-position = Vector2( 153, -39 )
-
 [node name="Grass" parent="." instance=ExtResource( 5 )]
 position = Vector2( 36, 56 )
 
@@ -285,5 +282,8 @@ position = Vector2( 36, 40 )
 
 [node name="Grass5" parent="." instance=ExtResource( 5 )]
 position = Vector2( 68, 56 )
+
+[node name="KinematicBody2D" parent="." instance=ExtResource( 1 )]
+position = Vector2( 153, -39 )
 
 [connection signal="hp_changed" from="KinematicBody2D" to="CanvasLayer/HUD" method="update_hp"]
