@@ -638,24 +638,24 @@ blend_mode = 1
 [sub_resource type="AnimationNodeAnimation" id=72]
 animation = "RollLeft"
 
-[sub_resource type="AnimationNodeAnimation" id=73]
-animation = "RollUp"
-
-[sub_resource type="AnimationNodeAnimation" id=74]
-animation = "RollDown"
-
 [sub_resource type="AnimationNodeAnimation" id=75]
 animation = "RollRight"
+
+[sub_resource type="AnimationNodeAnimation" id=79]
+animation = "RollDown"
+
+[sub_resource type="AnimationNodeAnimation" id=80]
+animation = "RollUp"
 
 [sub_resource type="AnimationNodeBlendSpace2D" id=76]
 blend_point_0/node = SubResource( 72 )
 blend_point_0/pos = Vector2( -1, 0 )
-blend_point_1/node = SubResource( 73 )
-blend_point_1/pos = Vector2( 0, 1.1 )
-blend_point_2/node = SubResource( 74 )
-blend_point_2/pos = Vector2( 0, -1 )
-blend_point_3/node = SubResource( 75 )
-blend_point_3/pos = Vector2( 1, 0 )
+blend_point_1/node = SubResource( 75 )
+blend_point_1/pos = Vector2( 1, 0 )
+blend_point_2/node = SubResource( 79 )
+blend_point_2/pos = Vector2( 0, 1.1 )
+blend_point_3/node = SubResource( 80 )
+blend_point_3/pos = Vector2( 0, -1.1 )
 min_space = Vector2( -1, -1.1 )
 max_space = Vector2( 1, 1.1 )
 blend_mode = 1
@@ -727,7 +727,6 @@ height = 12.0
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
 collision_layer = 2
-collision_mask = 5
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

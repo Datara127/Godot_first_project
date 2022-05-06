@@ -11,6 +11,7 @@ var hp = 5
 var state = State.MOVE
 var sword_damage = 2
 var velocity = Vector2.ZERO
+var roll_velocity = Vector2.DOWN
 var ACCELERATION = 500
 var MAX_SPEED = 80
 var FRICTION = 500
@@ -28,7 +29,7 @@ func _physics_process(delta):
 			attack_state()
 			
 		State.ROLL:
-			roll_state()
+			roll_state(delta)
 	
 
 func move_state(delta):
@@ -44,6 +45,7 @@ func move_state(delta):
 	
 	if state == State.MOVE:
 		if move_direction != Vector2.ZERO:
+			roll_velocity = move_direction
 			animTree.set("parameters/Idle/blend_position", move_direction)
 			animTree.set("parameters/Run/blend_position", move_direction)
 			animTree.set("parameters/Attack/blend_position", move_direction)
@@ -54,6 +56,10 @@ func move_state(delta):
 			animState.travel("Idle")
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 	
+	move()
+
+
+func move():
 	velocity = move_and_slide(velocity)
 
 
@@ -61,9 +67,10 @@ func attack_state():
 	animState.travel("Attack")
 	
 
-func roll_state():
+func roll_state(delta):
+	velocity = roll_velocity * MAX_SPEED * 1.25
 	animState.travel("Roll")
-
+	move()
 
 func sword_hit(enemy: Node2D):
 	if enemy.is_in_group("Enemy"):
