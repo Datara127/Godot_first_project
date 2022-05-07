@@ -6,18 +6,20 @@ enum State { ATTACK, MOVE, ROLL}
 onready var animSprite = $AnimationPlayer
 onready var animTree = $AnimationTree
 onready var animState = animTree.get("parameters/playback")
+onready var swordHitBox = $HitBoxPivot/SwordHItBox
 var speed = 100
 var hp = 5
 var state = State.MOVE
 var sword_damage = 2
 var velocity = Vector2.ZERO
-var roll_velocity = Vector2.DOWN
+var roll_vector = Vector2.LEFT
 var ACCELERATION = 500
 var MAX_SPEED = 80
 var FRICTION = 500
 
 func _ready():
 	call_deferred("change_hp", 0)
+	swordHitBox.knockback_vector = roll_vector
 
 
 func _physics_process(delta):
@@ -37,6 +39,7 @@ func move_state(delta):
 	move_direction.x = Input.get_action_strength("Move_right") - Input.get_action_strength("Move_left")
 	move_direction.y = Input.get_action_strength("Move_down") - Input.get_action_strength("Move_up")
 	move_direction = move_direction.normalized()
+	swordHitBox.knockback_vector = roll_vector
 	
 	if Input.is_action_just_pressed("hit_player"):
 		state = State.ATTACK
@@ -45,7 +48,8 @@ func move_state(delta):
 	
 	if state == State.MOVE:
 		if move_direction != Vector2.ZERO:
-			roll_velocity = move_direction
+			roll_vector = move_direction
+			roll_vector = move_direction
 			animTree.set("parameters/Idle/blend_position", move_direction)
 			animTree.set("parameters/Run/blend_position", move_direction)
 			animTree.set("parameters/Attack/blend_position", move_direction)
@@ -68,7 +72,7 @@ func attack_state():
 	
 
 func roll_state(delta):
-	velocity = roll_velocity * MAX_SPEED * 1.25
+	velocity = roll_vector * MAX_SPEED * 1.25
 	animState.travel("Roll")
 	move()
 
