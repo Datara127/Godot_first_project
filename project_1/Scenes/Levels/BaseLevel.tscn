@@ -596,5 +596,3 @@ position = Vector2( 210, 178 )
 
 [node name="KinematicBody2D" parent="." instance=ExtResource( 1 )]
 position = Vector2( 153, -39 )
-
-[connection signal="hp_changed" from="KinematicBody2D" to="CanvasLayer/HUD" method="update_hp"]

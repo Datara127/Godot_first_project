@@ -4,6 +4,7 @@
 [ext_resource path="res://Scripts/MainPerson.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/World/HItBox.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/SwordHItBox.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/World/HurtBox.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Animation" id=36]
 resource_name = "HitDown"
@@ -716,15 +717,13 @@ graph_offset = Vector2( 0, -79.9738 )
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 6.15333, 2.58807 )
 
-[sub_resource type="RectangleShape2D" id=25]
-extents = Vector2( 5.76177, 10.4513 )
-
-[sub_resource type="RectangleShape2D" id=32]
-extents = Vector2( 5.5, 4.25 )
-
 [sub_resource type="CapsuleShape2D" id=67]
 radius = 9.0
 height = 12.0
+
+[sub_resource type="CapsuleShape2D" id=81]
+radius = 5.0
+height = 10.0
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
 collision_layer = 2
@@ -734,7 +733,7 @@ script = ExtResource( 2 )
 scale = Vector2( 1.0791, 1.0283 )
 texture = ExtResource( 1 )
 hframes = 60
-frame = 12
+frame = 18
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 reset_on_save = false
@@ -761,10 +760,10 @@ tree_root = SubResource( 51 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/playback = SubResource( 52 )
-parameters/Attack/blend_position = Vector2( 0, 0 )
-parameters/Idle/blend_position = Vector2( 0, 0 )
-parameters/Roll/blend_position = Vector2( 0, 0 )
-parameters/Run/blend_position = Vector2( 0, 0 )
+parameters/Attack/blend_position = Vector2( 0, 1 )
+parameters/Idle/blend_position = Vector2( 0, 1 )
+parameters/Roll/blend_position = Vector2( 0, 1 )
+parameters/Run/blend_position = Vector2( 0, 1 )
 
 [node name="CollisionPlayer" type="CollisionShape2D" parent="."]
 position = Vector2( 0.392679, 8.247 )
@@ -777,24 +776,6 @@ zoom = Vector2( 0.5, 0.5 )
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 
-[node name="Take_dmg" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 5
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Take_dmg"]
-position = Vector2( 0, 2 )
-scale = Vector2( 1.0791, 1.0283 )
-shape = SubResource( 25 )
-
-[node name="SwordHit" type="Area2D" parent="."]
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SwordHit"]
-modulate = Color( 1, 0.0470588, 0.0666667, 1 )
-position = Vector2( 23.5, 11.75 )
-shape = SubResource( 32 )
-disabled = true
-
 [node name="HitBoxPivot" type="Position2D" parent="."]
 rotation = 4.71239
 
@@ -802,13 +783,21 @@ rotation = 4.71239
 position = Vector2( 18, 2 )
 collision_layer = 16
 script = ExtResource( 4 )
+damage = 2
 
 [node name="CollisionHitBox" parent="HitBoxPivot/SwordHItBox" index="0"]
 position = Vector2( -8, -3 )
 shape = SubResource( 67 )
 disabled = true
 
-[connection signal="body_entered" from="Take_dmg" to="." method="enemy_contact"]
-[connection signal="body_entered" from="SwordHit" to="." method="sword_hit"]
+[node name="HurtBox" parent="." instance=ExtResource( 5 )]
+collision_layer = 8
+
+[node name="CollisionHurtBox" parent="HurtBox" index="0"]
+position = Vector2( 0, 2 )
+shape = SubResource( 81 )
+
+[connection signal="area_entered" from="HurtBox" to="." method="_on_HurtBox_area_entered"]
 
 [editable path="HitBoxPivot/SwordHItBox"]
+[editable path="HurtBox"]

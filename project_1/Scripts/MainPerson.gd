@@ -1,24 +1,24 @@
 extends KinematicBody2D
 
 
-signal hp_changed
 enum State { ATTACK, MOVE, ROLL}
+
 onready var animSprite = $AnimationPlayer
 onready var animTree = $AnimationTree
 onready var animState = animTree.get("parameters/playback")
 onready var swordHitBox = $HitBoxPivot/SwordHItBox
-var speed = 100
-var hp = 5
+
 var state = State.MOVE
-var sword_damage = 2
 var velocity = Vector2.ZERO
-var roll_vector = Vector2.LEFT
+var roll_vector = Vector2.DOWN
 var ACCELERATION = 500
 var MAX_SPEED = 80
 var FRICTION = 500
+var stats = EntityStats
 
 func _ready():
-	call_deferred("change_hp", 0)
+	stats.connect("no_health", self, "quere_free")
+	animTree.active = true
 	swordHitBox.knockback_vector = roll_vector
 
 
@@ -26,7 +26,7 @@ func _physics_process(delta):
 	match state:
 		State.MOVE:
 			move_state(delta)
-			
+
 		State.ATTACK:
 			attack_state()
 			
@@ -76,10 +76,6 @@ func roll_state(delta):
 	animState.travel("Roll")
 	move()
 
-func sword_hit(enemy: Node2D):
-	if enemy.is_in_group("Enemy"):
-		hit_enemy_blue_slime(enemy)
-
 
 func animation_attack_finish():
 	state = State.MOVE
@@ -87,24 +83,7 @@ func animation_attack_finish():
 func animation_roll_finish():
 	state = State.MOVE
 
-	
-func enemy_contact(enemy: Node2D):
-	if enemy.is_in_group("Enemy"):
-		if enemy.is_in_group("slime"):
-			take_damage(-1)
-			hit_enemy_blue_slime(enemy)
 
-
-func hit_enemy_blue_slime(enemy: Node2D):
-	if enemy.has_method("taking_damage_from_a_player"):
-		enemy.taking_damage_from_a_player(sword_damage)
-
-
-func take_damage(damage: int):
-	change_hp(damage)
-	
-
-func change_hp(diff: int):
-	print(hp)
-	hp += diff
-	emit_signal("hp_changed", hp)	
+func _on_HurtBox_area_entered(area):
+	stats.health -= 1
+	print(stats.health)

@@ -1,16 +1,58 @@
 extends KinematicBody2D
 
-
+const EnemyDeathEffect = preload("res://Scenes/Effects/DeathEffect.tscn")
+enum {
+	IDLE,
+	WANDER,
+	CHASE
+}
+export var ACCELERATION = 300
+export var MAX_SPEED = 80
+export var FRICTION = 200
+var state = IDLE
 var knockback = Vector2.LEFT
-onready var stats = $Stats
+var velocity = Vector2.ZERO
+onready var stats = $EntityStats
+onready var playerDetectedZone = $PlayerDetection
+onready var enmySprite = $SmallShadow
+
 
 func _physics_process(delta):
-	knockback = knockback.move_toward(Vector2.ZERO, 200 * delta)
+	knockback = knockback.move_toward(Vector2.ZERO, FRICTION * delta)
 	knockback = move_and_slide(knockback)
+
+	match state:
+		IDLE:
+			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
+			seek_player()
+			
+		WANDER:
+			pass
+			
+		CHASE:
+			var player = playerDetectedZone.player
+			if player != null:
+				var dir = (player.global_position - global_position).normalized()
+				velocity = velocity.move_toward(dir * MAX_SPEED, ACCELERATION * delta)
+			else:
+				state = IDLE
+			enmySprite.flip_h = velocity.x <= 0
+	
+	velocity = move_and_slide(velocity)
+
+
+func seek_player():
+	if playerDetectedZone.can_see_player():
+		state = CHASE
 
 
 func _on_HurtBox_area_entered(area):
-	stats.hearth -= 1
-	if stats.hearth <= 0:
-		queue_free()
+	stats.health -= area.damage
 	knockback = area.knockback_vector * 120
+
+
+func _on_EntityStats_no_health():
+	queue_free()
+	var enemyAnimDeath = EnemyDeathEffect.instance()
+	get_parent().add_child(enemyAnimDeath)
+	enemyAnimDeath.global_position = global_position
