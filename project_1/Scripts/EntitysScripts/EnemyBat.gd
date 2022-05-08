@@ -12,9 +12,13 @@ export var FRICTION = 200
 var state = IDLE
 var knockback = Vector2.LEFT
 var velocity = Vector2.ZERO
+
 onready var stats = $EntityStats
 onready var playerDetectedZone = $PlayerDetection
 onready var enmySprite = $SmallShadow
+onready var batSprite = $SmallShadow
+onready var hurtBox = $HurtBox
+onready var softCollision = $SoftCollision
 
 
 func _physics_process(delta):
@@ -36,8 +40,10 @@ func _physics_process(delta):
 				velocity = velocity.move_toward(dir * MAX_SPEED, ACCELERATION * delta)
 			else:
 				state = IDLE
-			enmySprite.flip_h = velocity.x <= 0
+				batSprite.flip_h = velocity.x < 0
 	
+	if softCollision.is_colliding():
+		velocity += softCollision.get_push_vector() * delta * 400
 	velocity = move_and_slide(velocity)
 
 
@@ -49,6 +55,7 @@ func seek_player():
 func _on_HurtBox_area_entered(area):
 	stats.health -= area.damage
 	knockback = area.knockback_vector * 120
+	hurtBox.create_hit_effect()
 
 
 func _on_EntityStats_no_health():

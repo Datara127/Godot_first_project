@@ -2,9 +2,10 @@ extends KinematicBody2D
 
 onready var anim_sprite = $AnimatedSprite
 onready var timer_death = $Timer
-var hp = 4
-var slime_speed = 50
-var is_alife = true
+onready var stats = $EntityStats
+onready var hurtBox = $HurtBox
+onready var collisionHitBox = $HItBox/CollisionHitBox
+
 
 
 func _ready():
@@ -12,28 +13,22 @@ func _ready():
 
 
 func _physics_process(delta):
-	if is_alife:
-		var move_direction = Vector2()
-		
-		move_direction.x += slime_speed
-		
-		move_and_slide(move_direction)
-		
+	pass
 
 
-func taking_damage_from_a_player(damage: int):
-	hp -= damage
-	if hp <= 0:
-		is_alife = false
-		die()
-	
+func _on_HurtBox_area_entered(area):
+	stats.health -= area.damage
+	print(stats.health)
+	hurtBox.create_hit_effect()
 
-	
-func die():
+
+func _on_EntityStats_no_health():
 	anim_sprite.play("die")
 	$CollisionShape2D.set_deferred("disabled", true)
+	collisionHitBox.set_deferred("disabled", true)
 	timer_death.set_wait_time(3.0)
 	timer_death.start()
+	
 
 
 func _on_Timer_timeout():

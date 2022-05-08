@@ -2,9 +2,9 @@
 
 [ext_resource path="res://Assets/characters/PlayerFox.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/MainPerson.gd" type="Script" id=2]
-[ext_resource path="res://Scenes/World/HItBox.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Overlap/HItBox.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/SwordHItBox.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/World/HurtBox.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/Overlap/HurtBox.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Animation" id=36]
 resource_name = "HitDown"
@@ -772,7 +772,7 @@ shape = SubResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
-zoom = Vector2( 0.5, 0.5 )
+zoom = Vector2( 2, 2 )
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 
