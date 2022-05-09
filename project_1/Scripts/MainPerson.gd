@@ -8,6 +8,7 @@ onready var animTree = $AnimationTree
 onready var animState = animTree.get("parameters/playback")
 onready var swordHitBox = $HitBoxPivot/SwordHItBox
 onready var hurtBox = $HurtBox
+onready var time = $Node2D
 
 var state = State.MOVE
 var velocity = Vector2.ZERO
@@ -18,6 +19,7 @@ var FRICTION = 500
 var stats = EntityStats
 
 func _ready():
+	randomize()
 	stats.connect("no_health", self, "queue_free")
 	animTree.active = true
 	swordHitBox.knockback_vector = roll_vector
@@ -45,6 +47,7 @@ func move_state(delta):
 	if Input.is_action_just_pressed("hit_player"):
 		state = State.ATTACK
 	if Input.is_action_just_pressed("roll_space"):
+		time.starte(2)
 		state = State.ROLL
 	
 	if state == State.MOVE:

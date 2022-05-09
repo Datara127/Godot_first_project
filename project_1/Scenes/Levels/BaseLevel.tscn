@@ -560,7 +560,7 @@ tile_data = PoolIntArray( -655350, 0, 0, -524294, 0, 0, -524293, 0, 1, -524292, 
 [node name="YSort" type="YSort" parent="."]
 
 [node name="KinematicBody2D" parent="YSort" instance=ExtResource( 1 )]
-position = Vector2( 153, -39 )
+position = Vector2( 177, -49 )
 
 [node name="Trees" type="YSort" parent="YSort"]
 
@@ -653,7 +653,7 @@ position = Vector2( -9, -145 )
 [node name="Enemy" type="YSort" parent="YSort"]
 
 [node name="EnemyBat" parent="YSort/Enemy" instance=ExtResource( 8 )]
-position = Vector2( 202, 54 )
+position = Vector2( 165, 100 )
 
 [node name="EnemyBat2" parent="YSort/Enemy" instance=ExtResource( 8 )]
 position = Vector2( 27, -42 )
